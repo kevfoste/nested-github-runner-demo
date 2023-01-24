@@ -2,16 +2,16 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        required: false
+        required: true
         type: string
       workspace:
-        required: false
+        required: true
         type: string
       config-key:
-        required: false
+        required: true
         type: string
       build-type:
-        required: false
+        required: true
         type: string
 jobs:
   matrix:

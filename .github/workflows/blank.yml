@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    inputs:
+      platform:
+        required: true
+        type: string
+      workspace:
+        required: true
+        type: string
+      config-key:
+        required: true
+        type: string
+      build-type:
+        required: true
+        type: string
+jobs:
+  matrix:
+    name: Generate QA matrix
+    runs-on: ${{ inputs.platform }}
+    outputs:
+      matrix-json: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        shell: bash
+        run: |
+          matrix=$(python .github/workflows/config.py --config_key ${{ inputs.config-key }} --platform ${{ inputs.platform }} --externalRelease ${{ inputs.workspace }}/dev/build/seascape_release/latest --build_type ${{ inputs.build-type }})
+          #matrix=$(python .github/workflows/config.py --flag generate_qa_matrix --config_key ${{ inputs.config-key }} --platform ${{ inputs.platform }} --externalRelease ${{ inputs.workspace }}/dev/build/seascape_release/latest --build_type ${{ inputs.build-type }})
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+  qa:
+    needs: matrix
+    strategy:
+     #fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+    runs-on: ${{ matrix.platform }}
+    name: "QA Suite ${{ matrix.qa-dir }} on ${{ matrix.platform }}"
+    env:
+      #BUILD_WORKSPACE: ${{ inputs.workspace }}/dev/build
+      #RUNQA_PATH: ${{ inputs.workspace }}/dev/qa
+      GEAR_ARCH: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/sjo-env-setup
+        with:
+          platform: ${{ matrix.platform }}
+      - uses: ./.github/actions/runqa
+        with:
+          runqa-script-path: ${{ inputs.workspace }}/dev/qa/scripts
+          workspace: ${{ inputs.workspace }}/dev/qa/${{ matrix.qa-dir }}
+          runqa-options: ${{ matrix.qa-opts }} 

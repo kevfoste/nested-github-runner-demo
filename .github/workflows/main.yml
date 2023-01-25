@@ -27,6 +27,7 @@ jobs:
           matrix=$(python .github/workflows/config.py --config_key ${{ inputs.config-key }} --platform ${{ inputs.platform }} --externalRelease ${{ inputs.workspace }}/dev/build/seascape_release/latest --build_type ${{ inputs.build-type }})
           #matrix=$(python .github/workflows/config.py --flag generate_qa_matrix --config_key ${{ inputs.config-key }} --platform ${{ inputs.platform }} --externalRelease ${{ inputs.workspace }}/dev/build/seascape_release/latest --build_type ${{ inputs.build-type }})
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          echo "matrix value= $matrix"
   qa:
     needs: matrix
     strategy:

@@ -16,10 +16,13 @@ on:
 jobs:
   matrix:
     name: Generate QA matrix
+    strategy:
+      fail-fast: false
     runs-on: ${{ inputs.platform }}
-    platform: linux_x86_64_rhel7
-    qa-dir: /dev/qa
-    qa-opts: Optimized
+    env:
+      platform: linux_x86_64_rhel7
+      qa-dir: '/dev/qa'
+      qa-opts: Optimized
     outputs:
       matrix-json: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -36,12 +39,12 @@ jobs:
     strategy:
      #fail-fast: false
       matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
-    runs-on: ${{ matrix.platform }}
-    name: "QA Suite ${{ matrix.qa-dir }} on ${{ matrix.platform }}"
+    runs-on: ${{ platform }}
+    name: "QA Suite ${{ qa-dir }} on ${{ platform }}"
     env:
       #BUILD_WORKSPACE: ${{ inputs.workspace }}/dev/build
       #RUNQA_PATH: ${{ inputs.workspace }}/dev/qa
-      GEAR_ARCH: ${{ matrix.platform }}
+      GEAR_ARCH: ${{ platform }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/sjo-env-setup
@@ -50,5 +53,5 @@ jobs:
       - uses: ./.github/actions/runqa
         with:
           runqa-script-path: ${{ inputs.workspace }}/dev/qa/scripts
-          workspace: ${{ inputs.workspace }}/dev/qa/${{ matrix.qa-dir }}
-          runqa-options: ${{ matrix.qa-opts }} 
+          workspace: ${{ inputs.workspace }}/dev/qa/${{ qa-dir }}
+          runqa-options: ${{ qa-opts }} 

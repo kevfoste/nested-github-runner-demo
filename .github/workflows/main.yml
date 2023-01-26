@@ -35,7 +35,11 @@ jobs:
           #echo "matrix=$matrix" >> $GITHUB_OUTPUT
           echo "Running matrix job"
   qa:
-    needs: matrix
+    #needs: matrix
+    env:
+      platform: linux_x86_64_rhel7
+      qa-dir: '/dev/qa'
+      qa-opts: Optimized
     strategy:
      #fail-fast: false
       matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}

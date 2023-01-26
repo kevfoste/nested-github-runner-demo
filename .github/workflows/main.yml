@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
     runs-on: ${{ inputs.platform }}
     env:
-      platform: linux_x86_64_rhel7
-      qa-dir: '/dev/qa'
-      qa-opts: Optimized
+      platform: "linux_x86_64_rhel7"
+      qa-dir: "/dev/qa"
+      qa-opts: "Optimized"
     outputs:
       matrix-json: ${{ steps.set-matrix.outputs.matrix }}
     steps:

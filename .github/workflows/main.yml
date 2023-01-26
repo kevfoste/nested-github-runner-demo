@@ -16,9 +16,13 @@ on:
 jobs:
   matrix:
     name: Generate QA matrix
+    env:
+      platform: linux_x86_64_rhel7
+      qa-dir: '/dev/qa'
+      qa-opts: Optimized
     strategy:
       fail-fast: false
-    runs-on: ${{ inputs.platform }}
+    runs-on: ${{ platform }}
     outputs:
       matrix-json: ${{ steps.set-matrix.outputs.matrix }}
     steps:

@@ -19,10 +19,6 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.platform }}
-    env:
-      platform: "linux_x86_64_rhel7"
-      qa-dir: "/dev/qa"
-      qa-opts: "Optimized"
     outputs:
       matrix-json: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -35,13 +31,11 @@ jobs:
           #echo "matrix=$matrix" >> $GITHUB_OUTPUT
           echo "Running matrix job"
   qa:
-    #needs: matrix
     env:
       platform: linux_x86_64_rhel7
       qa-dir: '/dev/qa'
       qa-opts: Optimized
     strategy:
-     #fail-fast: false
       matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
     runs-on: ${{ platform }}
     name: "QA Suite ${{ qa-dir }} on ${{ platform }}"

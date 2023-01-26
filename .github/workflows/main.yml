@@ -45,10 +45,6 @@ jobs:
       matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
     runs-on: ${{ platform }}
     name: "QA Suite ${{ qa-dir }} on ${{ platform }}"
-    env:
-      #BUILD_WORKSPACE: ${{ inputs.workspace }}/dev/build
-      #RUNQA_PATH: ${{ inputs.workspace }}/dev/qa
-      GEAR_ARCH: ${{ platform }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/sjo-env-setup

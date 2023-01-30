@@ -1,0 +1,6 @@
+name: "six yaml"
+
+on: workflow_call
+jobs:
+  call_job1:
+		run: "Echo running six yaml"

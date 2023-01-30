@@ -31,21 +31,6 @@ jobs:
         shell: bash
         run: echo "Running matrix job"
   qa:
-    env:
-      platform: linux_x86_64_rhel7
-      qa-dir: '/dev/qa'
-      qa-opts: Optimized
-    strategy:
-      matrix: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
-    runs-on: ${{ platform }}
-    name: "QA Suite ${{ qa-dir }} on ${{ platform }}"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/sjo-env-setup
-        with:
-          platform: ${{ matrix.platform }}
-      - uses: ./.github/actions/runqa
-        with:
-          runqa-script-path: ${{ inputs.workspace }}/dev/qa/scripts
-          workspace: ${{ inputs.workspace }}/dev/qa/${{ qa-dir }}
-          runqa-options: ${{ qa-opts }} 
+    needs: matrix
+    uses: ./.github/workflows/one.yml
+    run: echo "Running qa job that needs matrix"

@@ -3,5 +3,5 @@ name: "one yaml"
 on: workflow_call
 jobs:
   call_job1:
-	  uses: ./.github/workflows/two.yml
-		run: "Echo running one yaml"
+    uses: ./.github/workflows/two.yml
+    run: "Echo running one yaml"
